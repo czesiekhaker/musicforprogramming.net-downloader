@@ -13,6 +13,7 @@ Downloads all tracks from musicforprogramming.net
 import inflect
 import urllib2
 from bs4 import BeautifulSoup
+import os
 
 # via https://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
 def sizeof_fmt(num, suffix='B'):
@@ -59,6 +60,10 @@ def main():
         soup = BeautifulSoup(html, "lxml")
         audio_url = soup.find(id="player")['src']
         file_name = audio_url.split("/")[-1]
+
+        if os.path.isfile(file_name):
+            print("({}/{}) {} is already here".format(i, no_episodes, file_name))
+            continue
 
         print("({}/{}) Downloading {}\n → {}".format(i, no_episodes, audio_url, file_name))
         download_file(file_name, audio_url)
